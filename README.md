@@ -20,7 +20,6 @@ You can add tasks, mark them as done, delete them, and the list saves automatica
 2. Open `index.html` in your browser  
 
 ## 🖼️ Screenshots
+ <img width="567" height="530" alt="Näyttökuva 2025-11-04 kello 14 49 19" src="https://github.com/user-attachments/assets/75b2290a-667d-4dd6-ae22-de3be531c70a" />
  
-
-
 ## 🎥 Demo Video

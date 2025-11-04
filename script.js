@@ -2,10 +2,10 @@ const taskInput = document.getElementById('taskInput');
 const addBtn = document.getElementById('addBtn');
 const taskList = document.getElementById('taskList');
 
-// Lataa tallennetut tehtävät kun sivu avataan
+//tallennetut tehtävät kun sivu avataan
 document.addEventListener('DOMContentLoaded', loadTasks);
 
-// Lisää uusi tehtävä
+// uusi tehtävä
 addBtn.addEventListener('click', addTask);
 
 function addTask() {
@@ -19,31 +19,42 @@ function addTask() {
   taskInput.value = '';
 }
 
-// Luo yksittäinen tehtävä-elementti
+// yksittäinen tehtävä-elementti
 function createTaskElement(text, completed = false) {
   const li = document.createElement('li');
   const span = document.createElement('span');
   span.textContent = text;
   li.appendChild(span);
 
-  if (completed) {
-    li.classList.add('completed');
-  }
+  if (completed) li.classList.add('completed');
 
+  // nappi tehtävän merkkaamiseen
   const doneBtn = document.createElement('button');
   doneBtn.textContent = '✓';
   doneBtn.classList.add('done-btn');
-
   doneBtn.addEventListener('click', () => {
     li.classList.toggle('completed');
     saveTasks();
   });
 
-  li.appendChild(doneBtn);
+  // nappi tehtävän poistamiseen
+  const deleteBtn = document.createElement('button');
+  deleteBtn.textContent = '✖';
+  deleteBtn.classList.add('delete-btn');
+  deleteBtn.addEventListener('click', () => {
+    li.remove();
+    saveTasks();
+  });
+
+  const buttonGroup = document.createElement('div');
+  buttonGroup.classList.add('button-group');
+  buttonGroup.append(doneBtn, deleteBtn);
+
+  li.appendChild(buttonGroup);
   return li;
 }
 
-// Tallennetaan localStorageen
+// localStorage
 function saveTasks() {
   const tasks = [];
   document.querySelectorAll('#taskList li').forEach(li => {
@@ -54,7 +65,7 @@ function saveTasks() {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-// Ladataan tallennetut tehtävät
+// tallennetut tehtävät
 function loadTasks() {
   const saved = JSON.parse(localStorage.getItem('tasks')) || [];
   saved.forEach(task => {

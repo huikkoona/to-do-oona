@@ -2,24 +2,22 @@ const taskInput = document.getElementById('taskInput');
 const addBtn = document.getElementById('addBtn');
 const taskList = document.getElementById('taskList');
 
-//tallennetut tehtävät kun sivu avataan
+// lataa tallennetut tehtävät
 document.addEventListener('DOMContentLoaded', loadTasks);
 
-// uusi tehtävä
+// lisää uusi tehtävä
 addBtn.addEventListener('click', addTask);
 
 function addTask() {
   const taskText = taskInput.value.trim();
-  if (taskText === '') return alert('Please write a task!');
-
+  if (taskText === '') return alert('please write a task!');
   const li = createTaskElement(taskText);
   taskList.appendChild(li);
-
   saveTasks();
   taskInput.value = '';
 }
 
-// yksittäinen tehtävä-elementti
+// luo tehtävä
 function createTaskElement(text, completed = false) {
   const li = document.createElement('li');
   const span = document.createElement('span');
@@ -28,7 +26,9 @@ function createTaskElement(text, completed = false) {
 
   if (completed) li.classList.add('completed');
 
-  // nappi tehtävän merkkaamiseen
+  const btns = document.createElement('div');
+  btns.classList.add('button-group');
+
   const doneBtn = document.createElement('button');
   doneBtn.textContent = '✓';
   doneBtn.classList.add('done-btn');
@@ -37,24 +37,20 @@ function createTaskElement(text, completed = false) {
     saveTasks();
   });
 
-  // nappi tehtävän poistamiseen
-  const deleteBtn = document.createElement('button');
-  deleteBtn.textContent = '✖';
-  deleteBtn.classList.add('delete-btn');
-  deleteBtn.addEventListener('click', () => {
+  const delBtn = document.createElement('button');
+  delBtn.textContent = '✖';
+  delBtn.classList.add('delete-btn');
+  delBtn.addEventListener('click', () => {
     li.remove();
     saveTasks();
   });
 
-  const buttonGroup = document.createElement('div');
-  buttonGroup.classList.add('button-group');
-  buttonGroup.append(doneBtn, deleteBtn);
-
-  li.appendChild(buttonGroup);
+  btns.append(doneBtn, delBtn);
+  li.appendChild(btns);
   return li;
 }
 
-// localStorage
+// tallenna localstorageen
 function saveTasks() {
   const tasks = [];
   document.querySelectorAll('#taskList li').forEach(li => {
@@ -65,7 +61,7 @@ function saveTasks() {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-// tallennetut tehtävät
+// lataa localstoragesta
 function loadTasks() {
   const saved = JSON.parse(localStorage.getItem('tasks')) || [];
   saved.forEach(task => {
